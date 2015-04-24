@@ -25,6 +25,7 @@ import java.util.Stack;
 
 import net.mindengine.galen.utils.GalenUtils;
 
+import org.apache.commons.io.IOUtils;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -98,8 +99,12 @@ public class JsFunctionLoad extends BaseFunction {
                     throw new FileNotFoundException(fullPath);
                 }
 
-
-                cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);
+                try {
+                    cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);
+                }
+                finally {
+                    IOUtils.closeQuietly(is);
+                }
                 loadedFileIds.add(fileId);
 
                 if (!contextPathStack.isEmpty()) {

@@ -101,7 +101,12 @@ public class GalenJsExecutor {
     public static String loadJsFromLibrary(String path) {
         try {
             InputStream is = GalenJsExecutor.class.getResourceAsStream("/js/" + path);
-            return  IOUtils.toString(is);
+            try {
+                return IOUtils.toString(is);
+            }
+            finally {
+                IOUtils.closeQuietly(is);
+            }
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
